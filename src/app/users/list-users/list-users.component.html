@@ -1,0 +1,132 @@
+
+
+<div class="title">
+    <span class="header">
+        <mat-icon>face</mat-icon>
+    </span>
+    <span class="header"><h1>&nbsp;&nbsp;&nbsp;User Editor</h1></span>
+      <span class="btn"><button mat-raised-button class="btn" [disabled]="isCreate" (click)="createUser(true)">Create New</button> 
+    </span>
+</div>
+
+  <mat-card class="card" *ngIf="isCreate">
+      <span class="header"><h1>&nbsp;&nbsp;&nbsp;New User</h1></span>
+      <form  [formGroup]="newUserForm" (submit)="saveNew('CREATE')"> 
+          <p>
+              <mat-form-field appearance="fill" >
+                  <mat-label>Type in User name</mat-label>
+                  <input matInput placeholder="Name" formControlName="name" required>
+                  <mat-hint>User Name</mat-hint>
+              </mat-form-field>
+          </p>
+        <!-- <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Type in password</mat-label>
+                <input type="password" matInput placeholder="Password" formControlName="password" required>
+                <mat-hint>Password</mat-hint>
+            </mat-form-field>
+        </p>--> 
+          <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Select specialization</mat-label>
+                <mat-select name="type"  placeholder="Specialization" formControlName="specialization" required multiple>
+                  <mat-option [value]="domainValues" *ngFor="let domainValues of domainValueTypes" >{{domainValues.description}}-{{domainValues.shortDescription}}</mat-option>
+                </mat-select>
+                <mat-hint>Specialization</mat-hint>
+            </mat-form-field>        
+          </p>
+          <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Select role</mat-label>
+                <mat-select name="type"  placeholder="Role" formControlName="role" required>
+                  <mat-option [value]="role" *ngFor="let role of typeList" >{{role}}</mat-option>
+                </mat-select>
+                <mat-hint>Role</mat-hint>
+            </mat-form-field>        
+          </p>
+          <mat-form-field appearance="fill" >
+            <mat-label>Allocated Hours</mat-label>
+            <input type="number" min="0" max="50" matInput placeholder="Allocated Hours" formControlName="allocatedHours">
+            <mat-hint>Allocated Hours</mat-hint>
+        </mat-form-field>  
+            <p></p>
+          <p>
+              <button mat-raised-button class="btn" color="primary" [disabled]="!newUserForm.valid">Save</button> 
+              &nbsp;
+              <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
+          </p>
+      </form>
+  </mat-card>
+  <mat-card class="card" *ngIf="isEdit">
+    <span class="header"><h1>&nbsp;&nbsp;&nbsp;Edit User</h1></span>
+    <form  [formGroup]="editUserForm" (submit)="saveNew('EDIT')"> 
+        <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Type in User name</mat-label>
+                <input matInput placeholder="Name" formControlName="name" required>
+                <mat-hint>User Name</mat-hint>
+            </mat-form-field>
+        </p>
+       <!-- <p>
+          <mat-form-field appearance="fill" >
+              <mat-label>Type in password</mat-label>
+              <input type="password" matInput placeholder="Password" formControlName="password" required>
+              <mat-hint>Password</mat-hint>
+          </mat-form-field>
+      </p>-->
+        <p>
+          <mat-form-field appearance="fill" >
+              <mat-label>Select specialization</mat-label>
+              <mat-select name="type"  placeholder="Specialization" formControlName="specialization"  [compareWith]="compareCategory" required multiple>
+                <mat-option [value]="domainValues" *ngFor="let domainValues of domainValueTypes" >{{domainValues.description}}-{{domainValues.shortDescription}}</mat-option>
+              </mat-select>
+              <mat-hint>Specialization</mat-hint>
+          </mat-form-field>        
+        </p>
+        <p>
+          <mat-form-field appearance="fill" >
+              <mat-label>Select role</mat-label>
+              <mat-select name="type"  placeholder="Role" formControlName="role" required>
+                <mat-option [value]="role" *ngFor="let role of typeList" >{{role}}</mat-option>
+              </mat-select>
+              <mat-hint>Role</mat-hint>
+          </mat-form-field>        
+        </p>
+        <mat-form-field appearance="fill" >
+          <mat-label>Allocated Hours</mat-label>
+          <input type="number" min="0" max="50" matInput placeholder="Allocated Hours" formControlName="allocatedHours">
+          <mat-hint>Allocated Hours</mat-hint>
+      </mat-form-field>  
+          <p></p>
+        <p>
+            <button mat-raised-button class="btn" color="primary" [disabled]="!editUserForm.valid" submit>Save</button> 
+            &nbsp;
+            <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
+        </p>
+    </form>
+</mat-card>
+<p></p><p></p>
+<div class="table-container">
+  <table mat-table [dataSource]="userList" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef> Role </th>
+      <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+    </ng-container>  
+    <ng-container matColumnDef="specialization">
+      <th mat-header-cell *matHeaderCellDef> Specialization </th>
+      <td mat-cell *matCellDef="let element"> 
+        <p *ngFor="let val of element.specialization">{{val.description}}-{{val.shortDescription}}</p>
+     </td>
+    </ng-container>
+    <ng-container matColumnDef="hours">
+      <th mat-header-cell *matHeaderCellDef> Alloted Hours </th>
+      <td mat-cell *matCellDef="let element"> {{element.allocatedHours}} </td>
+    </ng-container>   
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>    
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="editUser(true,row)"></tr>
+  </table>
+</div>

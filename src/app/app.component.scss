@@ -1,0 +1,23 @@
+.app-container{
+    height: 92%;
+    width: 97%;
+    
+}
+.watermark{
+    width: 90%;
+    height: 100%;
+    display:block;
+    }
+    .watermark::after {
+        content: "";
+       background:url("../assets/logo.png");
+       background-repeat: no-repeat;
+       background-size: 87% 100%;
+        opacity: 0.05;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;   
+      }

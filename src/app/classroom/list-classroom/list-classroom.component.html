@@ -1,0 +1,119 @@
+
+
+<div class="title">
+    <span class="header">
+        <mat-icon>account_balance</mat-icon>
+    </span>
+    <span class="header"><h1>&nbsp;&nbsp;&nbsp;Classroom Editor</h1></span>
+    <!--<span class="btn"><button mat-raised-button class="btn" [routerLink]="['/classroom/add']" (click)="getRow(row)">Create New</button> -->
+      <span class="btn"><button mat-raised-button class="btn" [disabled]="isCreate" (click)="createClassroom(true)">Create New</button> 
+    </span>
+</div>
+
+  <mat-card class="card" *ngIf="isCreate">
+      <span class="header"><h1>&nbsp;&nbsp;&nbsp;New Classroom</h1></span>
+      <form  [formGroup]="newClassroomForm" (submit)="saveNew('CREATE')"> 
+          <p>
+              <mat-form-field appearance="fill" >
+                  <mat-label>Type in classroom name</mat-label>
+                  <input matInput placeholder="Name" formControlName="name" required>
+                  <mat-hint>Classroom Name</mat-hint>
+              </mat-form-field>
+          </p>
+          <p>
+              <mat-form-field appearance="fill" >
+                  <mat-label>Type in description</mat-label>
+                  <input matInput placeholder="Description" formControlName="description">
+                  <mat-hint>Description</mat-hint>
+              </mat-form-field>
+          </p>
+              <mat-form-field appearance="fill" >
+                  <mat-label>Select room category</mat-label>
+                  <mat-select name="type"  placeholder="Category" formControlName="category"  multiple>
+                    <mat-option [value]="domainValues" *ngFor="let domainValues of domainValueTypes" >{{domainValues.description}}-{{domainValues.shortDescription}}</mat-option>
+                  </mat-select>
+                  <mat-hint>Room Category</mat-hint>
+              </mat-form-field>        
+            <mat-form-field appearance="fill" >
+                <mat-label>Select room type</mat-label>
+                <mat-select name="coursetype"  placeholder="Room Type" formControlName="coursetype" required>
+                  <mat-option [value]="type" *ngFor="let type of typeList" >{{type}}</mat-option>
+                </mat-select>
+                <mat-hint>Room Type</mat-hint>
+            </mat-form-field>
+            <p></p>
+          <p>
+              <button mat-raised-button class="btn" color="primary" [disabled]="!newClassroomForm.valid">Save</button> 
+              &nbsp;
+              <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
+          </p>
+      </form>
+  </mat-card>
+  <mat-card class="card" *ngIf="isEdit">
+    <span class="header"><h1>&nbsp;&nbsp;&nbsp;Edit Classroom</h1></span>
+    <form  [formGroup]="editClassroomForm" (submit)="saveNew('EDIT')"> 
+        <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Type in classroom name</mat-label>
+                <input matInput placeholder="Name" formControlName="name" required>
+                <mat-hint>Classroom Name</mat-hint>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Type in description</mat-label>
+                <input matInput placeholder="Description" formControlName="description">
+                <mat-hint>Description</mat-hint>
+            </mat-form-field>
+        </p>
+        
+        <p>
+            <mat-form-field appearance="fill" >
+                <mat-label>Select room category</mat-label>
+                <mat-select name="category"  placeholder="Category" formControlName="category" [compareWith]="compareCategory"  multiple>
+                  <mat-option [value]="domainValues" *ngFor="let domainValues of domainValueTypes" >{{domainValues.description}}-{{domainValues.shortDescription}}</mat-option>
+                </mat-select>
+                <mat-hint>Room Category</mat-hint>
+            </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill" >
+              <mat-label>Select room type</mat-label>
+              <mat-select name="coursetype"  placeholder="Room Type" formControlName="coursetype" [compareWith]="compareType" required>
+                <mat-option [value]="type" *ngFor="let type of typeList" >{{type}}</mat-option>
+              </mat-select>
+              <mat-hint>Room Type</mat-hint>
+          </mat-form-field>
+      </p>  <p></p>
+        <p>
+            <button mat-raised-button class="btn" color="primary" [disabled]="!editClassroomForm.valid" submit>Save</button> 
+            &nbsp;
+            <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
+        </p>
+    </form>
+</mat-card>
+<p></p><p></p>
+<div class="table-container">
+  <table mat-table [dataSource]="classroomList" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>  
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef> Category </th>
+      <td mat-cell *matCellDef="let element">
+          <p *ngFor="let val of element.category">{{val.description}}-{{val.shortDescription}}</p>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.coursetype}} </td>
+    </ng-container>      
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>    
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="editClassroom(true,row)"></tr>
+  </table>
+</div>

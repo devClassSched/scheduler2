@@ -198,20 +198,6 @@ export class ListViewComponent implements OnInit {
   }
   
 
-print() {
-    var printdata = this.docRef.nativeElement.outerHTML;
-     
-    var tab = window.open('') as Window;
-    tab.document.open();
-    tab.document.write(printdata);
-    setTimeout(() => {
-        tab.stop();
-        tab.print();
-        tab.close();
-    }, 300);
-}
-}
-function ViewChild(arg0: string, arg1: { static: boolean; }) {
-  throw new Error('Function not implemented.');
+
 }
 

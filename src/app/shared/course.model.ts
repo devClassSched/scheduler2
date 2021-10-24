@@ -1,3 +1,4 @@
+import { Classroom } from "./classroom.model";
 import { Domvalue } from "./domvalue.model";
 
 export class Course {
@@ -7,4 +8,7 @@ export class Course {
     category!: Domvalue;
     lectureHours!: number;
     labHours!: number;
+    lectureRoom!: Classroom;
+    labRoom!: Classroom;
+    section!: string;
 }

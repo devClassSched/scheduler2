@@ -10,16 +10,18 @@ import { LayoutModule } from './layout/layout.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ClassroomModule } from './classroom/classroom.module';
 import { CourseModule } from './course/course.module';
-import { SchedulerComponent } from './scheduler/scheduler/scheduler.component';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { SemesterModule } from './semester/semester.module';
 import { UsersModule } from './users/users.module';
 import {MatIconModule} from '@angular/material/icon';
 import { DialogModule } from './dialog/dialog.module';
- 
+import { ViewModule } from './view/view.module';
+import { MydialogComponent } from './mydialog/mydialog/mydialog.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MydialogComponent    
   ],
   imports: [
     BrowserModule,
@@ -29,6 +31,7 @@ import { DialogModule } from './dialog/dialog.module';
     SchedulerModule,
     SemesterModule,
     UsersModule,
+    ViewModule,    
     DialogModule,
     MatSidenavModule,
     MatIconModule,
@@ -38,6 +41,9 @@ import { DialogModule } from './dialog/dialog.module';
   ],
   providers: [],
   bootstrap: [AppComponent],
+  entryComponents:[
+    MydialogComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

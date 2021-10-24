@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AppConstants } from 'src/assets/constant';
 import { Scheduler } from '../shared/scheduler.model';
 
@@ -16,7 +17,10 @@ export class SchedulerService {
   }
 
   saveScheduler(scheduler: Scheduler){
-    console.log(scheduler);
     return this.http.post(this.cons.BASEURL+ "/scheduler/",scheduler);
+  }
+
+  deleteScheduler(scheduler: Scheduler): Observable<any>{
+    return this.http.post(this.cons.BASEURL+ "/scheduler/process",scheduler);
   }
 }

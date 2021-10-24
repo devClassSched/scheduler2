@@ -19,4 +19,7 @@ export class UserService {
     console.log(user);
     return this.http.post(this.cons.BASEURL+ "/user/",user);
   }
+  getAllProf(){  
+    return this.http.get(this.cons.BASEURL + "/user/professor")
+  }
 }

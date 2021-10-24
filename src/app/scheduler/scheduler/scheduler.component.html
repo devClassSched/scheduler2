@@ -3,19 +3,40 @@
         <mat-icon>library_books</mat-icon>
     </span>
     <span class="header"><h1>&nbsp;&nbsp;&nbsp;Scheduler A.I.</h1></span>
-      <span class="btn"><button mat-raised-button class="btn" [disabled]="isCreate" (click)="createScheduler(true)">Create New</button> 
+      <span class="btn">
+        &nbsp; &nbsp; <button mat-raised-button class="btn" [disabled]="isCreate" (click)="createScheduler(true)">Create New</button> 
+      <button mat-raised-button class="btn" (click)="refresh()">Refresh</button> 
     </span>
 </div>
+<mat-card class="card" *ngIf="showForm">
+  <span class="header"><h1>&nbsp;&nbsp;&nbsp;Schedule new Job</h1></span>
+  <form  [formGroup]="newSchedulerForm" (submit)="saveNew('CREATE')"> 
+    <mat-form-field appearance="fill" >
+      <mat-label>Select semester to process</mat-label>
+      <mat-select name="sem"  placeholder="Semester" formControlName="sem" required>
+        <mat-option [value]="type" *ngFor="let type of semesterList" >{{type.description}}</mat-option>
+      </mat-select>
+      <mat-hint>Semester</mat-hint>
+  </mat-form-field>
+        <p></p>
+      <p>
+          <button mat-raised-button class="btn" color="primary" [disabled]="!newSchedulerForm.valid">Save</button> 
+          &nbsp;
+          <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
+      </p>
+  </form>
+</mat-card>
 <div class="table-container">
     <table mat-table [dataSource]="schedulerList" class="mat-elevation-z8">
         <ng-container matColumnDef="icon">      
             <th mat-header-cell *matHeaderCellDef>  </th>      
             <td mat-cell *matCellDef="let element">
                 <mat-icon color="green" *ngIf="element.status === 'COMPLETED'">check</mat-icon>
+                <mat-icon color="green" class="btn" *ngIf="element.status === 'COMPLETED'" (click)="delete(element)">close</mat-icon>
                 <mat-spinner class="spinner" diameter="20" *ngIf="element.status !== 'COMPLETED'"></mat-spinner></td>
         </ng-container>
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <th mat-header-cell *matHeaderCellDef> Job Status </th>
         <td mat-cell *matCellDef="let element"> {{element.status}} </td>
       </ng-container>
       <ng-container matColumnDef="totalcourses">
@@ -27,7 +48,7 @@
         <td mat-cell *matCellDef="let element">{{element.completedCourses}}</td>
       </ng-container>
       <ng-container matColumnDef="coursenotcompleted">
-        <th mat-header-cell *matHeaderCellDef> Not Yet Processed </th>
+        <th mat-header-cell *matHeaderCellDef> Not Processed </th>
         <td mat-cell *matCellDef="let element">{{element.courseNotCompleted}}
         </td>
       </ng-container>

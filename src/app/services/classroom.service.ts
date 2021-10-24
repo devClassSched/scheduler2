@@ -14,6 +14,13 @@ export class ClassroomService {
   listClassroom(){  
     return this.http.get(this.cons.BASEURL + "/classroom")
   }
+
+  getALlLectureRoom(){  
+    return this.http.get(this.cons.BASEURL + "/classroom/lecture")
+  }
+  getALlLabRoom(){  
+    return this.http.get(this.cons.BASEURL + "/classroom/lab")
+  }
   viewClassroom(id: string){
     return this.http.get(this.cons.BASEURL + "/classroom/"+id)
   }

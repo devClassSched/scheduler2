@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Domvalue } from 'src/app/shared/domvalue.model';
 import { UserService } from 'src/app/services/user.service';
-import { ReferenceService } from 'src/app/services/reference.service';
 import { User } from 'src/app/shared/user.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Domvalue } from 'src/app/shared/domvalue.model';
+import { ReferenceService } from 'src/app/services/reference.service';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-list-users',
@@ -28,7 +29,7 @@ export class ListUsersComponent implements OnInit {
   constructor(private userService: UserService, 
     private referenceService: ReferenceService,
     private formBuilder: FormBuilder,
-    private _snackBar: MatSnackBar) { }
+    private snack: DialogService) { }
 
   ngOnInit(): void {
      this.refreshGrid();
@@ -80,11 +81,11 @@ export class ListUsersComponent implements OnInit {
     }
     
     this.userService.saveUser(dataToSend).subscribe(data =>{
-        this._snackBar.open("User saved.");
+      this.snack.openSnackBar('User saved...');
         this.refreshGrid();
         this.cancel();
     }, err=>{
-      this._snackBar.open("Unable to save User");      
+      this.snack.openSnackBar("Unable to save User");      
     });
     this.refreshGrid();
     this.cancel();

@@ -5,6 +5,9 @@ import { CourseService } from 'src/app/services/course.service';
 import { ReferenceService } from 'src/app/services/reference.service';
 import { Course } from 'src/app/shared/course.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClassroomService } from 'src/app/services/classroom.service';
+import { Classroom } from 'src/app/shared/classroom.model';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-list-course',
@@ -16,7 +19,7 @@ export class ListCourseComponent implements OnInit {
   courseList: any;
   isCreate: boolean = false;
   isEdit: boolean = false;
-  displayedColumns: string[] = ['name', 'description', 'category', 'lectureHours','labHours'];
+  displayedColumns: string[] = ['name', 'description','section', 'category', 'lectureHours','lectureRoom','labHours','labRoom'];
   
   typeList: string[] = ['LECTURE','LABORATORY'];
   
@@ -25,14 +28,24 @@ export class ListCourseComponent implements OnInit {
   selected: string | undefined;
   selectedCourse: Course = new Course();
   editCourseForm: FormGroup = new FormGroup({});
+  lectureRoomList!: Classroom[];
+  labRoomList!: Classroom[];
+
   constructor(private courseService: CourseService, 
     private referenceService: ReferenceService,
+    private classroomService: ClassroomService,
     private formBuilder: FormBuilder,
-    private _snackBar: MatSnackBar) { }
+    private snack: DialogService) { }
 
   ngOnInit(): void {
      this.refreshGrid();
    
+     this.classroomService.getALlLabRoom().subscribe((data : any) =>{
+       this.labRoomList = data;
+     });
+     this.classroomService.getALlLectureRoom().subscribe((data : any) =>{
+      this.lectureRoomList = data;
+    });
     this.referenceService.getCatgeory().subscribe((data : any) =>{
       this.domainValueTypes = data;
     });
@@ -42,7 +55,10 @@ export class ListCourseComponent implements OnInit {
     this.newCourseForm = this.formBuilder.group({
       'name': new FormControl(''),
       'description': new FormControl(''),
+      'section': new FormControl(''),
       'lectureHours': new FormControl(''),
+      'lectureRoom': new FormControl(''),
+      'labRoom': new FormControl(''),
       'labHours': new FormControl(''),
       'category': new FormControl('')
     })
@@ -60,10 +76,13 @@ export class ListCourseComponent implements OnInit {
     this.editCourseForm = this.formBuilder.group({
       'id': new FormControl(this.selectedCourse.id),
       'name': new FormControl(this.selectedCourse.name),
-      'description': new FormControl(this.selectedCourse.description),
+      'description': new FormControl(this.selectedCourse.description),      
+      'section': new FormControl(this.selectedCourse.section),
       'category': new FormControl(this.selectedCourse.category), 
       'lectureHours': new FormControl(this.selectedCourse.lectureHours),
-      'labHours': new FormControl(this.selectedCourse.labHours)
+      'labHours': new FormControl(this.selectedCourse.labHours),
+      'labRoom': new FormControl(this.selectedCourse.labRoom),
+      'lectureRoom': new FormControl(this.selectedCourse.lectureRoom)
   });
     this.isCreate = !val;
     this.isEdit = val;
@@ -80,11 +99,11 @@ export class ListCourseComponent implements OnInit {
     }
     
     this.courseService.saveCourse(dataToSend).subscribe(data =>{
-        this._snackBar.open("Course saved.");
+      this.snack.openSnackBar("Course saved.");
         this.refreshGrid();
         this.cancel();
     }, err=>{
-      this._snackBar.open("Unable to save Course");      
+      this.snack.openSnackBar("Unable to save Course");      
     });
     this.refreshGrid();
     this.cancel();

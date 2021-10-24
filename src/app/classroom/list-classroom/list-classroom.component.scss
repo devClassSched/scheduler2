@@ -12,8 +12,18 @@
   .table-container {
     margin-top: 10px;
     min-height:400px;
-    max-height: 400px;
+    max-height: 800px;
     overflow: auto;
+  }
+  
+  td.mat-cell:first-child {
+    /* row border */
+    border-left: 1px solid rgb(187, 124, 129);
+  }
+  
+  td.mat-cell:last-child {
+    /* row border */
+    border-right: 1px solid  rgb(187, 124, 129);
   }
 .title {    
     margin-left:50px;
@@ -31,8 +41,7 @@
 .mat-header-cell {
   font-size: large;
   font-weight: bold;
-  color: rgb(199, 170, 172);
-  background-color: rgb(145, 85, 90);
+  background-color: rgb(187, 124, 129);
 }
 .mat-row:nth-child(odd){
   background-color:rgb(243, 240, 240);

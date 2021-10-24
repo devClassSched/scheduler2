@@ -1,0 +1,109 @@
+<div class="title">
+    <span class="header">
+        <mat-icon>event_note</mat-icon>
+    </span>
+    <span class="header"><h1>&nbsp;&nbsp;&nbsp;View Schedules</h1></span>
+     
+</div>
+
+<mat-card class="card" >
+    <span class="header"><h1>&nbsp;&nbsp;&nbsp;Find schedule</h1></span>
+    <form  [formGroup]="newFilterForm" (submit)="filter()"> 
+      <p>
+      <mat-form-field appearance="fill" >
+        <mat-label>Select semester to view</mat-label>
+        <mat-select name="sem"  placeholder="Semester" formControlName="sem" required>
+          <mat-option [value]="type" *ngFor="let type of semesterList" >{{type.description}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+  </p>
+<p>
+    <mat-radio-group aria-label="Select an option" (change)="radioChange($event)" formControlName="type"> 
+        <mat-radio-button value="1">View By Professor</mat-radio-button>&nbsp;&nbsp;
+        <mat-radio-button value="2">View By Classroom</mat-radio-button>
+      </mat-radio-group>
+    </p>
+    <p *ngIf="isByProfessor">
+      <mat-form-field appearance="fill" >
+        <mat-label>Select Professor</mat-label>
+        <mat-select name="prof"  placeholder="Professor" formControlName="prof" [required]="isByProfessor">
+          <mat-option [value]="type" *ngFor="let type of userList" >{{type.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    </p>
+    <p *ngIf="!isByProfessor">
+    <mat-form-field appearance="fill" >
+      <mat-label>Select Classroom</mat-label>
+      <mat-select name="room"  placeholder="Classroom" formControlName="room" [required]="!isByProfessor">
+        <mat-option [value]="type" *ngFor="let type of roomList" >{{type.description}} - {{type.name}}</mat-option>
+      </mat-select>      
+  </mat-form-field>
+  </p>
+  <button mat-raised-button class="btn" color="primary" >View</button> 
+
+    </form>
+</mat-card>
+
+<div class="table-container" *ngIf="isHide">
+  <button mat-raised-button class="btn" color="primary" (click)="print()">Print</button> 
+  <table mat-table [dataSource]="dailysched" class="mat-elevation-z8">
+      <ng-container matColumnDef="Time">      
+          <th mat-header-cell *matHeaderCellDef>Time</th>      
+          <td mat-cell *matCellDef="let element">{{element.time}}
+            </td>
+      </ng-container>
+    <ng-container matColumnDef="Monday">
+      <th mat-header-cell *matHeaderCellDef> Monday </th>
+      <td mat-cell *matCellDef="let element"> 
+        <b>{{element.monday.course}}</b><br>        
+        <p class="time">{{element.monday.hour}}</p>
+        {{element.monday.section}}<br>
+        {{element.monday.room}}<br>
+        {{element.monday.prof}} 
+     </td>
+    </ng-container>
+    <ng-container matColumnDef="Tuesday">
+      <th mat-header-cell *matHeaderCellDef> Tuesday </th>
+      <td mat-cell *matCellDef="let element">  
+        <b>{{element.tuesday.course}}</b><br>        
+        <p class="time">{{element.tuesday.hour}}</p>
+        {{element.tuesday.section}}<br>
+        {{element.tuesday.room}}<br>
+        {{element.tuesday.prof}} 
+      </td>
+    </ng-container>  
+    <ng-container matColumnDef="Wednesday">
+      <th mat-header-cell *matHeaderCellDef> Wednesday </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{element.wednesday.course}}</b><br>        
+        <p class="time">{{element.wednesday.hour}}</p>
+        {{element.wednesday.section}}<br>
+        {{element.wednesday.room}}<br>
+        {{element.wednesday.prof}} 
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="Thursday">
+      <th mat-header-cell *matHeaderCellDef> Thursday </th>
+      <td mat-cell *matCellDef="let element">
+        <b>{{element.thursday.course}}</b><br>
+        <p class="time">{{element.thursday.hour}}</p>
+        {{element.thursday.section}}<br>
+        {{element.thursday.room}}<br>
+        {{element.thursday.prof}} 
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="Friday">
+      <th mat-header-cell *matHeaderCellDef> Friday </th>
+      <td mat-cell *matCellDef="let element" >
+        <b>{{element.friday.course}}</b><br>
+        <p class="time">{{element.friday.hour}}</p>        
+        {{element.friday.section}}<br>
+        {{element.friday.room}}<br>
+        {{element.friday.prof}} 
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>    
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+    <tr class="mat-row" *matNoDataRow></tr>
+  </table>
+</div>

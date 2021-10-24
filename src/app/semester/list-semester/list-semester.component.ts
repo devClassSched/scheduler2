@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DialogService } from 'src/app/services/dialog.service';
 import { SemesterService } from 'src/app/services/semester.service';
 import { Semester } from 'src/app/shared/semester.model';
 
@@ -25,7 +26,7 @@ export class ListSemesterComponent implements OnInit {
   editSemesterForm: FormGroup = new FormGroup({});
   constructor(private semesterService: SemesterService,  
     private formBuilder: FormBuilder,
-    private _snackBar: MatSnackBar) { }
+    private snack: DialogService) { }
 
   ngOnInit(): void {
      this.refreshGrid();
@@ -67,11 +68,11 @@ export class ListSemesterComponent implements OnInit {
     }
     
     this.semesterService.saveSemester(dataToSend).subscribe(data =>{
-        this._snackBar.open("Semester saved.");
+      this.snack.openSnackBar("Semester saved.");
         this.refreshGrid();
         this.cancel();
     }, err=>{
-      this._snackBar.open("Unable to save Semester");      
+      this.snack.openSnackBar("Unable to save Semester");      
     });
     this.refreshGrid();
     this.cancel();

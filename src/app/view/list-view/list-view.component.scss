@@ -18,26 +18,24 @@ table {
 
 .title .btn { float:right }
 .title .header { float:left }
-
+.time{
+  font-size: xx-small;
+  font-style: italic;
+}
 .example-button-row{
      margin-left:50px;
      padding-bottom: 16px;
-  }
- .mat-row .mat-cell {
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
-    cursor: pointer;
+  }  
+  td.mat-cell:first-child {
+    /* row border */
+    border-left: 1px solid rgb(187, 124, 129);
   }
   
-  .mat-row:hover .mat-cell {
-    border-color: currentColor;
-    background:whitesmoke;
+  td.mat-cell:last-child {
+    /* row border */
+    border-right: 1px solid  rgb(187, 124, 129);
   }
-  .mat-header-cell {
-      
-    font-size: large;
-  font-weight: bold;
-}
+  
   .card {
     width: 93%;
     margin-left:50px;
@@ -51,8 +49,12 @@ table {
   .tableEntry {
     width: 100%;
   }
-
+.sched{
+  font-size: smaller;
+  max-width: 150px;
+}
   .mat-header-cell {
+    justify-content: center;text-align: center;
     font-size: large;
     font-weight: bold;
     background-color: rgb(187, 124, 129);
@@ -60,18 +62,13 @@ table {
   .mat-row:nth-child(odd){
     background-color:rgb(243, 240, 240);
   }
-  td.mat-cell:first-child {
-    /* row border */
-    border-left: 1px solid rgb(187, 124, 129);
-  }
-  
-  td.mat-cell:last-child {
-    /* row border */
-    border-right: 1px solid  rgb(187, 124, 129);
+  .mat-cell {
+    text-align: center;
+    justify-content:center;
   }
 .table-container {
   margin-top: 10px;
   min-height:400px;
-  max-height: 800px;
+  max-height: 500px;
   overflow: auto;
 }

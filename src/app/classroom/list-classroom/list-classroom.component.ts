@@ -5,6 +5,7 @@ import { ClassroomService } from 'src/app/services/classroom.service';
 import { ReferenceService } from 'src/app/services/reference.service';
 import { Classroom } from 'src/app/shared/classroom.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-list-classroom',
@@ -27,8 +28,8 @@ export class ListClassroomComponent implements OnInit {
   editClassroomForm: FormGroup = new FormGroup({});
   constructor(private classroomService: ClassroomService, 
     private referenceService: ReferenceService,
-    private formBuilder: FormBuilder,
-    private _snackBar: MatSnackBar) { }
+    private formBuilder: FormBuilder,    
+    private snack: DialogService) { }
 
   ngOnInit(): void {
      this.refreshGrid();
@@ -78,11 +79,10 @@ export class ListClassroomComponent implements OnInit {
     }
     
     this.classroomService.saveClassroom(dataToSend).subscribe(data =>{
-        this._snackBar.open("Classroom saved.");
-        this.refreshGrid();
-        this.cancel();
+      this.snack.openSnackBar("Classroom saved.");
+       
     }, err=>{
-      this._snackBar.open("Unable to save classroom");      
+      this.snack.openSnackBar("Unable to save classroom");      
     });
     this.refreshGrid();
     this.cancel();

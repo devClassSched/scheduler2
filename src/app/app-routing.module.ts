@@ -5,11 +5,13 @@ import { ListCourseComponent } from './course/list-course/list-course.component'
 import { ListClassroomComponent } from './classroom/list-classroom/list-classroom.component';
 import { ListSemesterComponent } from './semester/list-semester/list-semester.component';
 import { SchedulerComponent } from './scheduler/scheduler/scheduler.component';
+import { ListViewComponent } from './view/list-view/list-view.component';
 
 
 const routes: Routes = [
+  {path:'view', component: ListViewComponent},
   {path:'users', component: ListUsersComponent},
- 
+  
   {path:'course', component: ListCourseComponent},
   {path:'classroom', component: ListClassroomComponent},
   {path:'semester', component: ListSemesterComponent},

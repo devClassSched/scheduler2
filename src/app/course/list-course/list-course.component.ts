@@ -7,7 +7,9 @@ import { Course } from 'src/app/shared/course.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassroomService } from 'src/app/services/classroom.service';
 import { Classroom } from 'src/app/shared/classroom.model';
+import { Semester } from 'src/app/shared/semester.model';
 import { DialogService } from 'src/app/services/dialog.service';
+import { SemesterService } from 'src/app/services/semester.service';
 
 @Component({
   selector: 'app-list-course',
@@ -30,10 +32,12 @@ export class ListCourseComponent implements OnInit {
   editCourseForm: FormGroup = new FormGroup({});
   lectureRoomList!: Classroom[];
   labRoomList!: Classroom[];
+  semList!: Semester[];
 
   constructor(private courseService: CourseService, 
     private referenceService: ReferenceService,
     private classroomService: ClassroomService,
+    private semesterService: SemesterService,
     private formBuilder: FormBuilder,
     private snack: DialogService) { }
 
@@ -43,6 +47,9 @@ export class ListCourseComponent implements OnInit {
      this.classroomService.getALlLabRoom().subscribe((data : any) =>{
        this.labRoomList = data;
      });
+     this.semesterService.listSemester().subscribe((data : any) =>{
+      this.semList = data;
+    });
      this.classroomService.getALlLectureRoom().subscribe((data : any) =>{
       this.lectureRoomList = data;
     });
@@ -60,7 +67,8 @@ export class ListCourseComponent implements OnInit {
       'lectureRoom': new FormControl(''),
       'labRoom': new FormControl(''),
       'labHours': new FormControl(''),
-      'category': new FormControl('')
+      'category': new FormControl(''),
+      'semester': new FormControl('')
     })
     this.isEdit = !val;
     this.isCreate = val;
@@ -82,7 +90,8 @@ export class ListCourseComponent implements OnInit {
       'lectureHours': new FormControl(this.selectedCourse.lectureHours),
       'labHours': new FormControl(this.selectedCourse.labHours),
       'labRoom': new FormControl(this.selectedCourse.labRoom),
-      'lectureRoom': new FormControl(this.selectedCourse.lectureRoom)
+      'lectureRoom': new FormControl(this.selectedCourse.lectureRoom),
+      'semester': new FormControl(this.selectedCourse.semester)
   });
     this.isCreate = !val;
     this.isEdit = val;

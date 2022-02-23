@@ -28,4 +28,12 @@ export class ClassroomService {
     console.log(classroom);
     return this.http.post(this.cons.BASEURL+ "/classroom/",classroom);
   }
+
+  delete(classroom: Classroom){  
+    return this.http.post(this.cons.BASEURL + "/classroomDelete/",classroom);
+  }
+
+  canDelete(classroom: Classroom){  
+    return this.http.post(this.cons.BASEURL + "/classroomCanDelete/",classroom);
+  }
 }

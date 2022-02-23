@@ -19,4 +19,11 @@ export class CourseService {
     console.log(course);
     return this.http.post(this.cons.BASEURL+ "/course/",course);
   }
+  delete(course: Course){  
+    return this.http.post(this.cons.BASEURL + "/courseDelete/",course);
+  }
+
+  canDelete(course: Course){  
+    return this.http.post(this.cons.BASEURL + "/courseCanDelete/",course);
+  }
 }

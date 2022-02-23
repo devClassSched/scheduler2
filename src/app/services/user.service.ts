@@ -22,4 +22,13 @@ export class UserService {
   getAllProf(){  
     return this.http.get(this.cons.BASEURL + "/user/professor")
   }
+
+  delete(user: User){  
+    return this.http.post(this.cons.BASEURL + "/userDelete/",user);
+  }
+
+  canDelete(user: User){  
+    return this.http.post(this.cons.BASEURL + "/userCanDelete/",user);
+  }
+
 }

@@ -70,15 +70,13 @@
             <mat-form-field appearance="fill" >
               <mat-label>Select Semester</mat-label>
               <mat-select name="type"  placeholder="Semester" formControlName="semester">
-                <mat-option [value]="sem" *ngFor="let rooms of semList" >{{sem.description}}</mat-option>
+                <mat-option [value]="sem" *ngFor="let sem of semList" >{{sem.description}}</mat-option>
               </mat-select>
              
           </mat-form-field>       
             <p></p>
           <p>
-              <button mat-raised-button class="btn" color="primary" [disabled]="!newCourseForm.valid">Save</button> 
-              &nbsp;
-            <button mat-raised-button class="btn" (click)="cancel()">Delete</button> 
+              <button mat-raised-button class="btn" color="primary" [disabled]="!newCourseForm.valid">Save</button>               
               &nbsp;
               <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
           </p>
@@ -137,7 +135,7 @@
           <mat-form-field appearance="fill" >
             <mat-label>Select Semester</mat-label>
             <mat-select name="type"  placeholder="Semester" formControlName="semester">
-              <mat-option [value]="sem" *ngFor="let rooms of semList" >{{sem.description}}</mat-option>
+              <mat-option [value]="sem" *ngFor="let sem of semList" >{{sem.description}}</mat-option>
             </mat-select>
            
         </mat-form-field>    
@@ -145,7 +143,7 @@
         <p>
             <button mat-raised-button class="btn" color="primary" [disabled]="!editCourseForm.valid" submit>Save</button> 
             &nbsp;
-            <button mat-raised-button class="btn" (click)="cancel()">Delete</button> 
+            <button mat-raised-button class="btn" [disabled]="!enableDelete" (click)="delete()">Delete</button> 
             &nbsp;
             <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
         </p>

@@ -101,6 +101,8 @@
         <p>
             <button mat-raised-button class="btn" color="primary" [disabled]="!editUserForm.valid" submit>Save</button> 
             &nbsp;
+            <button mat-raised-button class="btn" [disabled]="!enableDelete" (click)="delete()">Delete</button> 
+            &nbsp;
             <button mat-raised-button class="btn" (click)="cancel()">Cancel</button> 
         </p>
     </form>

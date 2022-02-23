@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Domvalue } from 'src/app/shared/domvalue.model';
 import { CourseService } from 'src/app/services/course.service';
@@ -33,13 +33,15 @@ export class ListCourseComponent implements OnInit {
   lectureRoomList!: Classroom[];
   labRoomList!: Classroom[];
   semList!: Semester[];
+  enableDelete: boolean = false;
 
   constructor(private courseService: CourseService, 
     private referenceService: ReferenceService,
     private classroomService: ClassroomService,
     private semesterService: SemesterService,
     private formBuilder: FormBuilder,
-    private snack: DialogService) { }
+    private snack: DialogService,
+    private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void {
      this.refreshGrid();
@@ -78,6 +80,42 @@ export class ListCourseComponent implements OnInit {
     this.isCreate = false;
     this.selectedCourse = new Course();
     this.editCourseForm = new FormGroup({});
+    this.enableDelete = false;
+  }
+
+  canDelete(){
+    let dataToSend : Course;
+    let dataWithSched: any;
+    dataToSend = this.editCourseForm.value;
+
+    this.courseService.canDelete(dataToSend).subscribe(data =>{
+      dataWithSched = data;
+      console.log(dataWithSched.length);
+      if(dataWithSched.length == 0){
+        this.enableDelete = true;
+      }else{
+        this.enableDelete = false;
+      }
+    }, err=>{
+      this.snack.openSnackBar("Unable to delete Course");      
+    });
+  }
+  delete(){
+    this.isEdit = false;
+    this.isCreate = false;
+    let dataToSend : Course;
+    dataToSend = this.editCourseForm.value;
+
+    this.courseService.delete(dataToSend).subscribe(data =>{
+      this.snack.openSnackBar("Course deleted.");
+        this.refreshGrid();
+        this.cancel();
+    }, err=>{
+      this.snack.openSnackBar("Unable to delete Course");      
+    });
+    this.refreshGrid();
+    this.cancel();
+
   }
   editCourse(val: boolean,course: any){
     this.selectedCourse = course;
@@ -93,11 +131,12 @@ export class ListCourseComponent implements OnInit {
       'lectureRoom': new FormControl(this.selectedCourse.lectureRoom),
       'semester': new FormControl(this.selectedCourse.semester)
   });
+   
+    this.canDelete();
     this.isCreate = !val;
     this.isEdit = val;
     
-    
-  }
+      }
 
   saveNew(action: string){
     let dataToSend : Course;
@@ -109,19 +148,19 @@ export class ListCourseComponent implements OnInit {
     
     this.courseService.saveCourse(dataToSend).subscribe(data =>{
       this.snack.openSnackBar("Course saved.");
-        this.refreshGrid();
         this.cancel();
+        this.refreshGrid();
     }, err=>{
       this.snack.openSnackBar("Unable to save Course");      
     });
-    this.refreshGrid();
-    this.cancel();
+  
     
   }
 
   refreshGrid(){
     this.courseService.listCourse().subscribe((data : any) =>{
       this.courseList = data;
+      this.changeDetectorRefs.detectChanges();
     });
   }
   compareCategory(object1: any, object2: any) {

@@ -32,8 +32,7 @@ export class ListViewComponent implements OnInit {
   displayedColumns: string[] = ['Time','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday'];
   schedulerList!: any;
 
-  dailysched: Array<Dailysched> = [
-    { time:"06:00-07:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },    
+  dailysched: Array<Dailysched> = [    
     { time:"07:00-08:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
     { time:"08:00-09:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
     { time:"09:00-10:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
@@ -95,8 +94,7 @@ export class ListViewComponent implements OnInit {
       this.response = data;      
       if(this.response !== null){
         
-        this.dailysched = [
-          { time:"06:00-07:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },    
+        this.dailysched = [         
           { time:"07:00-08:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
           { time:"08:00-09:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
           { time:"09:00-10:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
@@ -131,7 +129,7 @@ export class ListViewComponent implements OnInit {
   convert(){
     let i =0;
     let arr = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
-    let time = ['06:00','07:00','08:00','09:00','10:00',
+    let time = ['07:00','08:00','09:00','10:00',
         '11:00','12:00','13:00','14:00','15:00','16:00','17:00',
         '18:00'];
     for(var hour of time){             

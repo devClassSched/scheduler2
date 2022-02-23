@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Domvalue } from 'src/app/shared/domvalue.model';
 import { ClassroomService } from 'src/app/services/classroom.service';
@@ -26,10 +26,14 @@ export class ListClassroomComponent implements OnInit {
   selected: string | undefined;
   selectedClassroom: Classroom = new Classroom();
   editClassroomForm: FormGroup = new FormGroup({});
+  
+  enableDelete: boolean = false;
+
   constructor(private classroomService: ClassroomService, 
     private referenceService: ReferenceService,
     private formBuilder: FormBuilder,    
-    private snack: DialogService) { }
+    private snack: DialogService,
+    private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void {
      this.refreshGrid();
@@ -54,6 +58,42 @@ export class ListClassroomComponent implements OnInit {
     this.isCreate = false;
     this.selectedClassroom = new Classroom();
     this.editClassroomForm = new FormGroup({});
+    
+    this.enableDelete = false;
+  }
+  canDelete(){
+    let dataToSend : Classroom;
+    let dataWithSched: any;
+    dataToSend = this.editClassroomForm.value;
+
+    this.classroomService.canDelete(dataToSend).subscribe(data =>{
+      dataWithSched = data;
+      console.log(dataWithSched.length);
+      if(dataWithSched.length == 0){
+        this.enableDelete = true;
+      }else{
+        this.enableDelete = false;
+      }
+    }, err=>{
+      this.snack.openSnackBar("Unable to delete Classroom");      
+    });
+  }
+  delete(){
+    this.isEdit = false;
+    this.isCreate = false;
+    let dataToSend : Classroom;
+    dataToSend = this.editClassroomForm.value;
+
+    this.classroomService.delete(dataToSend).subscribe(data =>{
+      this.snack.openSnackBar("Classroom deleted.");
+        this.refreshGrid();
+        this.cancel();
+    }, err=>{
+      this.snack.openSnackBar("Unable to delete Classroom");      
+    });
+    this.refreshGrid();
+    this.cancel();
+
   }
   editClassroom(val: boolean,classroom: any){
     this.selectedClassroom = classroom;
@@ -67,7 +107,7 @@ export class ListClassroomComponent implements OnInit {
     this.isCreate = !val;
     this.isEdit = val;
     
-    
+    this.canDelete();
   }
 
   saveNew(action: string){
@@ -80,18 +120,20 @@ export class ListClassroomComponent implements OnInit {
     
     this.classroomService.saveClassroom(dataToSend).subscribe(data =>{
       this.snack.openSnackBar("Classroom saved.");
-       
+      this.cancel();
+      this.refreshGrid();
     }, err=>{
       this.snack.openSnackBar("Unable to save classroom");      
-    });
-    this.refreshGrid();
-    this.cancel();
+    });    
+
+    
     
   }
 
   refreshGrid(){
     this.classroomService.listClassroom().subscribe((data : any) =>{
       this.classroomList = data;
+      this.changeDetectorRefs.detectChanges();
     });
   }
   compareCategory(object1: any, object2: any) {

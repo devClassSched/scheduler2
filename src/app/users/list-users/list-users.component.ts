@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/shared/user.model';
@@ -26,10 +26,14 @@ export class ListUsersComponent implements OnInit {
   selected: string | undefined;
   selectedUser: User = new User();
   editUserForm: FormGroup = new FormGroup({});
+
+  enableDelete: boolean = false;
+
   constructor(private userService: UserService, 
     private referenceService: ReferenceService,
     private formBuilder: FormBuilder,
-    private snack: DialogService) { }
+    private snack: DialogService,
+    private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void {
      this.refreshGrid();
@@ -55,6 +59,7 @@ export class ListUsersComponent implements OnInit {
     this.isCreate = false;
     this.selectedUser = new User();
     this.editUserForm = new FormGroup({});
+    this.enableDelete = false;
   }
   editUser(val: boolean,User: any){
     this.selectedUser = User;
@@ -68,10 +73,43 @@ export class ListUsersComponent implements OnInit {
   });
     this.isCreate = !val;
     this.isEdit = val;
-    
+    this.canDelete();
     
   }
+canDelete(){
+    let dataToSend : User;
+    let dataWithSched: any;
+    dataToSend = this.editUserForm.value;
 
+    this.userService.canDelete(dataToSend).subscribe(data =>{
+      dataWithSched = data;
+      console.log(dataWithSched.length);
+      if(dataWithSched.length == 0){
+        this.enableDelete = true;
+      }else{
+        this.enableDelete = false;
+      }
+    }, err=>{
+      this.snack.openSnackBar("Unable to delete User");      
+    });
+  }
+  delete(){
+    this.isEdit = false;
+    this.isCreate = false;
+    let dataToSend : User;
+    dataToSend = this.editUserForm.value;
+
+    this.userService.delete(dataToSend).subscribe(data =>{
+      this.snack.openSnackBar("User deleted.");
+        this.refreshGrid();
+        this.cancel();
+    }, err=>{
+      this.snack.openSnackBar("Unable to delete User");      
+    });
+    this.refreshGrid();
+    this.cancel();
+
+  }
   saveNew(action: string){
     let dataToSend : User;
     if(action == "CREATE"){
@@ -82,8 +120,8 @@ export class ListUsersComponent implements OnInit {
     
     this.userService.saveUser(dataToSend).subscribe(data =>{
       this.snack.openSnackBar('User saved...');
-        this.refreshGrid();
         this.cancel();
+        this.refreshGrid();        
     }, err=>{
       this.snack.openSnackBar("Unable to save User");      
     });
@@ -95,6 +133,7 @@ export class ListUsersComponent implements OnInit {
   refreshGrid(){
     this.userService.listUser().subscribe((data : any) =>{
       this.userList = data;
+      this.changeDetectorRefs.detectChanges();
     });
   }
   compareCategory(object1: any, object2: any) {

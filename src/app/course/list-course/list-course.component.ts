@@ -21,7 +21,7 @@ export class ListCourseComponent implements OnInit {
   courseList: any;
   isCreate: boolean = false;
   isEdit: boolean = false;
-  displayedColumns: string[] = ['name', 'description','section', 'category', 'lectureHours','lectureRoom','labHours','labRoom'];
+  displayedColumns: string[] = ['name', 'description','section', 'category', 'lectureHours','lectureRoom','labHours','labRoom','semester'];
   
   typeList: string[] = ['LECTURE','LABORATORY'];
   
@@ -136,7 +136,7 @@ export class ListCourseComponent implements OnInit {
     this.isCreate = !val;
     this.isEdit = val;
     
-      }
+  }
 
   saveNew(action: string){
     let dataToSend : Course;
@@ -154,7 +154,8 @@ export class ListCourseComponent implements OnInit {
       this.snack.openSnackBar("Unable to save Course");      
     });
   
-    
+    this.cancel();
+    this.refreshGrid();
   }
 
   refreshGrid(){
@@ -166,5 +167,7 @@ export class ListCourseComponent implements OnInit {
   compareCategory(object1: any, object2: any) {
     return object1 && object2 && object1.id == object2.id;
  }
+
+ 
 
 }

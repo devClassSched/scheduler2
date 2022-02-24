@@ -132,6 +132,7 @@ export class ListClassroomComponent implements OnInit {
 
   refreshGrid(){
     this.classroomService.listClassroom().subscribe((data : any) =>{
+      data = data.filter((obj: Classroom) => obj.description != "NA");
       this.classroomList = data;
       this.changeDetectorRefs.detectChanges();
     });

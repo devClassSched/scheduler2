@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/shared/user.model';
@@ -55,7 +55,8 @@ export class ListViewComponent implements OnInit {
     private schedDetailService: SchedDetailService,
     private userService: UserService,
     private formBuilder: FormBuilder,  
-    private snack: DialogService) { }
+    private snack: DialogService,
+    private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getSemester();
@@ -77,6 +78,7 @@ export class ListViewComponent implements OnInit {
   }
   getClassroom(){
     this.classroomService.listClassroom().subscribe((data : any) =>{
+      data = data.filter((obj: Classroom) => obj.description != "NA");
       this.roomList = data;
     });
   }
@@ -89,31 +91,37 @@ export class ListViewComponent implements OnInit {
     else
       dataToSend.room = this.newFilterForm.controls['room'].value.id;
     
-      this.isHide = false;
+    this.isHide = true;
+
     this.schedDetailService.getSchedule(dataToSend).subscribe((data : any) =>{
-      this.response = data;      
-      if(this.response !== null){
+      this.response = data;           
+           
+        if(data.length > 0){
+          this.isHide = false;
+        }else{ 
+          this.isHide = true;this.changeDetectorRefs.detectChanges();
+          this.snack.openSnackBar("No Schedule Found!");
+          
+        }  
+        if(this.response !== null){             
+            this.dailysched = [         
+              { time:"07:00-08:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"08:00-09:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"09:00-10:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"10:00-11:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"11:00-12:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"12:00-13:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"13:00-14:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"14:00-15:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"15:00-16:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"16:00-17:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"17:00-18:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
+              { time:"18:00-19:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() }
+            ];
+              this.convert();             
+        }
         
-        this.dailysched = [         
-          { time:"07:00-08:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"08:00-09:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"09:00-10:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"10:00-11:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"11:00-12:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"12:00-13:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"13:00-14:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"14:00-15:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"15:00-16:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"16:00-17:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"17:00-18:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() },
-          { time:"18:00-19:00",monday:new Coursesched(),tuesday:new Coursesched(),wednesday: new Coursesched(),thursday: new Coursesched(), friday:new Coursesched() }
-        ];
-          this.convert();
-      }
-    });
-    if(!this.isHide){
-      this.snack.openSnackBar('No Schedule found...');
-    }
+    });   
   }
   radioChange(event: any){
     if(event.value === "1"){
@@ -192,7 +200,6 @@ export class ListViewComponent implements OnInit {
         }
         i++;
     }
-    console.log(this.dailysched);
   }
   
 
